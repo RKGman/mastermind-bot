@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, MessagePayload, Message, MessageReaction } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
@@ -6,21 +6,32 @@ module.exports = {
 		.setName('play')
 		.setDescription('Start a game of Mastermind'),
 	async execute(interaction) {
-		const row = new MessageActionRow()
+		const row1 = new MessageActionRow()
 			.addComponents( [
 				new MessageButton()
-					.setCustomId('start')
 					.setLabel('Start')
 					.setStyle('PRIMARY')
 					.setCustomId("start-game-btn"), 
 				new MessageButton()
-					.setCustomId('end')
 					.setLabel('End')
 					.setStyle('SECONDARY')
 					.setCustomId("end-game-btn")
 				]
 			);
 
-		await interaction.reply({ content: 'You Ready?!', components: [row] });
+		const row2 = new MessageActionRow()
+		.addComponents( [
+			new MessageButton()
+				.setLabel('🔴')
+				.setStyle('SECONDARY')
+				.setCustomId("peg-1-btn"), 
+			new MessageButton()
+				.setLabel('🔵')
+				.setStyle('SECONDARY')
+				.setCustomId("peg-2-btn")
+			]
+		);
+
+		await interaction.reply({ content: 'You Ready?!', components: [row1, row2] });
 	},
 };
