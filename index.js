@@ -53,7 +53,11 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.isButton()) {
         console.log("Button Press Detected...");
-        interaction.reply({ content: 'Starting Game...', ephemeral: true });
+        if (interaction.customId == "start-game-btn") {
+            interaction.reply({ content: 'Starting Game...', ephemeral: true });
+        } else {
+            interaction.reply({ content: 'You pressed a different button...', ephemeral: true });
+        }
     }
 
     if (!interaction.isCommand()) {
