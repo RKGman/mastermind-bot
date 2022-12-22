@@ -26,27 +26,13 @@ module.exports = {
 		// TODO: "Submit" a guess
 		// TODO: Set up a reply
 
-		interaction
 		var rv = processGame(2);
 		
 		const row2 = new ActionRowBuilder()
-		.addComponents( [
-			new ButtonBuilder()
-				.setLabel('🔴')
-				.setStyle(ButtonStyle.Secondary)
-				.setCustomId("peg-1-btn"), 
-			new ButtonBuilder()
-				.setLabel('🔵')
-				.setStyle(ButtonStyle.Secondary)
-				.setCustomId("peg-2-btn")
-			]
-		);
-
-		const row3 = new ActionRowBuilder()
-			.addComponents(
+			.addComponents([
 				new StringSelectMenuBuilder()
-					.setCustomId('peg-selector')
-					.setPlaceholder('Nothing selected')
+					.setCustomId('peg-selector-1')
+					.setPlaceholder('🔴')
 					.addOptions(
 						{
 							label: '🔴',
@@ -58,9 +44,71 @@ module.exports = {
 							description: 'Blue Peg',
 							value: 'second_option',
 						},
-					),
+					)
+				]			
 			);
 
-		await interaction.reply({ content: 'You Ready?!', components: [row1, row2, row3] });
+		const row3 = new ActionRowBuilder()
+			.addComponents([
+				new StringSelectMenuBuilder()
+					.setCustomId('peg-selector-2')
+					.setPlaceholder('🔴')
+					.addOptions(
+						{
+							label: '🔴',
+							description: 'Red Peg',
+							value: 'first_option',
+						},
+						{
+							label: '🔵',
+							description: 'Blue Peg',
+							value: 'second_option',
+						},
+					)
+				]			
+			);
+
+		const row4 = new ActionRowBuilder()
+			.addComponents([
+				new StringSelectMenuBuilder()
+					.setCustomId('peg-selector-3')
+					.setPlaceholder('🔴')
+					.addOptions(
+						{
+							label: '🔴',
+							description: 'Red Peg',
+							value: 'first_option',
+						},
+						{
+							label: '🔵',
+							description: 'Blue Peg',
+							value: 'second_option',
+						},
+					)
+				]			
+			);
+
+		const row5 = new ActionRowBuilder()
+			.addComponents([
+				new StringSelectMenuBuilder()
+					.setCustomId('peg-selector-4')
+					.setPlaceholder('🔴')
+					.addOptions(
+						{
+							label: '🔴',
+							description: 'Red Peg',
+							value: 'first_option',
+						},
+						{
+							label: '🔵',
+							description: 'Blue Peg',
+							value: 'second_option',
+						},
+					)
+				]			
+			);
+
+		// Apparently can only have a maximum of 5 rows... which might be perfect for our "form"
+		await interaction.reply({ content: 'You Ready?!', components: [row1, row2, row3, row4, row5] });
 	},
 };
