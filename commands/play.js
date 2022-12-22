@@ -1,6 +1,5 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, StringSelectMenuBuilder, MessagePayload, Message, MessageReaction, MessageSelectMenu } = require('discord.js');
-//const { SlashCommandBuilder } = require('@discordjs/builders');
-const { startGame, processGame } = require('../services/mastermind');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, StringSelectMenuBuilder } = require('discord.js');
+const { processGame } = require('../services/mastermind');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,8 +25,10 @@ module.exports = {
 		// TODO: "Submit" a guess
 		// TODO: Set up a reply
 
+		// Possibly pass in "state" and guess? 
 		var rv = processGame(2);
 		
+		// TODO: Will have to handle a "guess state"... possible handle a "submit guess state"
 		const row2 = new ActionRowBuilder()
 			.addComponents([
 				new StringSelectMenuBuilder()
