@@ -12,12 +12,11 @@ You will probably need to create a config.json, for example:
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Intents, MessageActionRow, MessageButton } = require('discord.js');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
 
 // Set up the client and intents
-// TODO: Figure out what all these intents do... had to add these to get message detection to work.
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_INTEGRATIONS] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds]});
 
 // ========= Set up the collection of commands =========
 client.commands = new Collection();

@@ -1,37 +1,66 @@
-const { MessageActionRow, MessageButton, MessagePayload, Message, MessageReaction } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, StringSelectMenuBuilder, MessagePayload, Message, MessageReaction, MessageSelectMenu } = require('discord.js');
+//const { SlashCommandBuilder } = require('@discordjs/builders');
+const { startGame, processGame } = require('../services/mastermind');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('play')
 		.setDescription('Start a game of Mastermind'),
 	async execute(interaction) {
-		const row1 = new MessageActionRow()
+		const row1 = new ActionRowBuilder()
 			.addComponents( [
-				new MessageButton()
+				new ButtonBuilder()
 					.setLabel('Start')
-					.setStyle('PRIMARY')
+					.setStyle(ButtonStyle.Primary)
 					.setCustomId("start-game-btn"), 
-				new MessageButton()
+				new ButtonBuilder()
 					.setLabel('End')
-					.setStyle('SECONDARY')
+					.setStyle(ButtonStyle.Secondary)
 					.setCustomId("end-game-btn")
 				]
 			);
 
-		const row2 = new MessageActionRow()
+
+		// TODO: Set up a starting configuration
+		// TODO: Add a row of selectors
+		// TODO: "Submit" a guess
+		// TODO: Set up a reply
+
+		interaction
+		var rv = processGame(2);
+		
+		const row2 = new ActionRowBuilder()
 		.addComponents( [
-			new MessageButton()
+			new ButtonBuilder()
 				.setLabel('🔴')
-				.setStyle('SECONDARY')
+				.setStyle(ButtonStyle.Secondary)
 				.setCustomId("peg-1-btn"), 
-			new MessageButton()
+			new ButtonBuilder()
 				.setLabel('🔵')
-				.setStyle('SECONDARY')
+				.setStyle(ButtonStyle.Secondary)
 				.setCustomId("peg-2-btn")
 			]
 		);
 
-		await interaction.reply({ content: 'You Ready?!', components: [row1, row2] });
+		const row3 = new ActionRowBuilder()
+			.addComponents(
+				new StringSelectMenuBuilder()
+					.setCustomId('peg-selector')
+					.setPlaceholder('Nothing selected')
+					.addOptions(
+						{
+							label: '🔴',
+							description: 'Red Peg',
+							value: 'first_option',
+						},
+						{
+							label: '🔵',
+							description: 'Blue Peg',
+							value: 'second_option',
+						},
+					),
+			);
+
+		await interaction.reply({ content: 'You Ready?!', components: [row1, row2, row3] });
 	},
 };

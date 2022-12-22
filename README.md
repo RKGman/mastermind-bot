@@ -5,6 +5,7 @@ Discord Bot To Play Mastermind With Friends
 # Getting Started With Development
 
 - Node v.18.12.1 
+- Might wanna do an `npm install` from the root here...
 - Set up your config.json (Might need token from me for shared dev server, or just roll your own)
     - `clientId` can be found in the "OAuth2" section of discord dev app
     - `guildId` can be found by right clicking on the server icon and "Copy ID" where bot as been added
