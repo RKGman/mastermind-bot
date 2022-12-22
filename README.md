@@ -1,5 +1,8 @@
 # mastermind-bot
+
 Discord Bot To Play Mastermind With Friends
+
+Currently using discord.js v14
 
 
 # Getting Started With Development
@@ -15,8 +18,6 @@ Discord Bot To Play Mastermind With Friends
 
 # TODO: 
 
-- Figure out how to "string" together a bunch of button presses
+- Figure out how to initialize the game state (generate a peg color code combo)
 
-- Add way to generate a "code"
-
-- Add in the basic loop for the game 
+- Figure out how to pass around "state" and guesses
