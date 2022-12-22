@@ -2,7 +2,7 @@
 
 Discord Bot To Play Mastermind With Friends
 
-Currently using discord.js v14
+Currently using discord.js v14 (https://discordjs.guide/)
 
 
 # Getting Started With Development
