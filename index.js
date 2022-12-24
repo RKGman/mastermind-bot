@@ -50,6 +50,22 @@ client.on('messageCreate', async message => {
 client.on('interactionCreate', async interaction => {
     console.log("We got an interaction: " + interaction.id);
 
+    if (interaction.isStringSelectMenu()) {
+
+        const selected = interaction.values[0];
+
+        // TODO: Figure out if state can be kept here in index for now...
+        if (interaction.customId == "peg-selector-1") {
+            if (selected == "red_peg") {
+                await interaction.update('🔴' + "selected");
+            } else {
+                await interaction.update('🔵' + "selected");
+            }
+            
+        }
+    }
+	
+
     if (interaction.isButton()) {
         console.log("Button Press Detected...");
         if (interaction.customId == "start-game-btn") {

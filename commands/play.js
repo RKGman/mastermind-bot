@@ -38,12 +38,12 @@ module.exports = {
 						{
 							label: '🔴',
 							description: 'Red Peg',
-							value: 'first_option',
+							value: 'red_peg',
 						},
 						{
 							label: '🔵',
 							description: 'Blue Peg',
-							value: 'second_option',
+							value: 'blue_peg',
 						},
 					)
 				]			

@@ -18,6 +18,7 @@ Currently using discord.js v14 (https://discordjs.guide/)
 # Commands 
 
 `/ping` - Bot replies with "Pong"... quick test to see if we are up and running
+
 `/play` - Currently the main entry point for our Mastermind game
 
 # TODO: 
