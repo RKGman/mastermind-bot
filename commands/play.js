@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder, StringSelectMenuBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, SlashCommandBuilder, StringSelectMenuBuilder } = require('discord.js');
 const { processGame } = require('../services/mastermind');
 
 module.exports = {
@@ -109,7 +109,12 @@ module.exports = {
 				]			
 			);
 
+		const embed = new EmbedBuilder()
+			.setColor(0x0099FF)
+			.setTitle('Response')
+			.setDescription('Some description here');
+
 		// Apparently can only have a maximum of 5 rows... which might be perfect for our "form"
-		await interaction.reply({ content: 'You Ready?!', components: [row1, row2, row3, row4, row5] });
+		await interaction.reply({ content: 'You Ready?!', embeds: [embed], components: [row1, row2, row3, row4, row5] });
 	},
 };
