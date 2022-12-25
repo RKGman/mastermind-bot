@@ -32,6 +32,11 @@ for (const file of commandFiles) {
 }
 // ====================================================== 
 
+// Current Guesses
+const guesses = ["blue_peg", "green_peg", "red_peg", "yellow_peg"];
+
+const guessDisplay = ["⭕", "⭕", "⭕", "⭕"];
+
 // A message to let us know the bot spun up correctly...
 client.once('ready', () => {
     console.log('Ready!');
@@ -57,14 +62,18 @@ client.on('interactionCreate', async interaction => {
         // TODO: Figure out if state can be kept here in index for now...
         if (interaction.customId == "peg-selector-1") {
             if (selected == "red_peg") {
-                await interaction.update('🔴' + "selected");
-            } else {
+                guesses[0] = "red_peg";              
+                //await interaction.update('🔴' + "selected");
+                await interaction.update("⭕, ⭕, ⭕, ⭕");
+            } else if (selected == "blue_peg") {
+                guesses[0] = "blue_peg";
                 await interaction.update('🔵' + "selected");
-            }
-            
+            } else if (selected == "green_peg") {
+                guesses[0] = "green_peg";
+                await interaction.update('🟢' + "selected");
+            }          
         }
-    }
-	
+    }	
 
     if (interaction.isButton()) {
         console.log("Button Press Detected...");
@@ -86,7 +95,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     try {
-        await command.execute(interaction);
+        await command.execute(interaction, guesses);
     } catch (error) {
         console.error(error);
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });

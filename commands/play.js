@@ -33,19 +33,8 @@ module.exports = {
 			.addComponents([
 				new StringSelectMenuBuilder()
 					.setCustomId('peg-selector-1')
-					.setPlaceholder('🔴')
-					.addOptions(
-						{
-							label: '🔴',
-							description: 'Red Peg',
-							value: 'red_peg',
-						},
-						{
-							label: '🔵',
-							description: 'Blue Peg',
-							value: 'blue_peg',
-						},
-					)
+					.setPlaceholder('Peg Color 1 GUESS')
+					.addOptions(getOptions())
 				]			
 			);
 
@@ -53,19 +42,8 @@ module.exports = {
 			.addComponents([
 				new StringSelectMenuBuilder()
 					.setCustomId('peg-selector-2')
-					.setPlaceholder('🔴')
-					.addOptions(
-						{
-							label: '🔴',
-							description: 'Red Peg',
-							value: 'first_option',
-						},
-						{
-							label: '🔵',
-							description: 'Blue Peg',
-							value: 'second_option',
-						},
-					)
+					.setPlaceholder("Peg Color 2 GUESS")
+					.addOptions(getOptions())
 				]			
 			);
 
@@ -73,19 +51,8 @@ module.exports = {
 			.addComponents([
 				new StringSelectMenuBuilder()
 					.setCustomId('peg-selector-3')
-					.setPlaceholder('🔴')
-					.addOptions(
-						{
-							label: '🔴',
-							description: 'Red Peg',
-							value: 'first_option',
-						},
-						{
-							label: '🔵',
-							description: 'Blue Peg',
-							value: 'second_option',
-						},
-					)
+					.setPlaceholder("Peg Color 3 GUESS")
+					.addOptions(getOptions())
 				]			
 			);
 
@@ -93,19 +60,8 @@ module.exports = {
 			.addComponents([
 				new StringSelectMenuBuilder()
 					.setCustomId('peg-selector-4')
-					.setPlaceholder('🔴')
-					.addOptions(
-						{
-							label: '🔴',
-							description: 'Red Peg',
-							value: 'first_option',
-						},
-						{
-							label: '🔵',
-							description: 'Blue Peg',
-							value: 'second_option',
-						},
-					)
+					.setPlaceholder("Peg Color 4 GUESS")
+					.addOptions(getOptions())
 				]			
 			);
 
@@ -118,3 +74,68 @@ module.exports = {
 		await interaction.reply({ content: 'You Ready?!', embeds: [embed], components: [row1, row2, row3, row4, row5] });
 	},
 };
+
+function getOptions() {
+	return [{
+		label: '🔵 - Blue',
+		description: 'Blue Peg',
+		value: 'blue_peg', // TODO: Can we enum these values?  Maybe constant them in another file
+	},
+	{
+		label: '🟢 - Green',
+		description: 'Green Peg',
+		value: 'green_peg',
+	},
+	{
+		label: '🔴 - Red',
+		description: 'Red Peg',
+		value: 'red_peg',
+	},
+	{
+		label: '🟡 - Yellow',
+		description: 'Yellow Peg',
+		value: 'yellow_peg',
+	},
+	{
+		label: '🟠 - Orange',
+		description: 'Orange Peg',
+		value: 'orange_peg',
+	},
+	{
+		label: '🟣 - Purple',
+		description: 'Purple Peg',
+		value: 'purple_peg',
+	},
+	{
+		label: '⚪ - White',
+		description: 'White Peg',
+		value: 'white_peg',
+	},
+	{
+		label: '⚫ - Black',
+		description: 'Black Peg',
+		value: 'black_peg',
+	}];
+}
+
+function getPlaceholder(value) {
+	if (value == 'blue_peg') {
+		return '🔵 - Blue';
+	} else if (value == 'green_peg') {
+		return '🟢 - Green';
+	} else if (value == 'red_peg') {
+		return '🔴 - Red';
+	} else if (value == 'green_peg') {
+		return '🟢 - Green';
+	} else if (value == 'yellow_peg') {
+		return '🟡 - Yellow';
+	} else if (value == 'orange_peg') {
+		return '🟠 - Orange';
+	} else if (value == 'purple_peg') {
+		return '🟣 - Purple';
+	} else if (value == 'white_peg') {
+		return '⚪ - White';
+	} else if (value == 'black_peg') {
+		return '⚫ - Black';
+	}
+}
