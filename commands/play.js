@@ -125,8 +125,6 @@ function getPlaceholder(value) {
 		return '🟢 - Green';
 	} else if (value == 'red_peg') {
 		return '🔴 - Red';
-	} else if (value == 'green_peg') {
-		return '🟢 - Green';
 	} else if (value == 'yellow_peg') {
 		return '🟡 - Yellow';
 	} else if (value == 'orange_peg') {

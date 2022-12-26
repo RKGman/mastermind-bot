@@ -61,16 +61,13 @@ client.on('interactionCreate', async interaction => {
 
         // TODO: Figure out if state can be kept here in index for now...
         if (interaction.customId == "peg-selector-1") {
-            if (selected == "red_peg") {
-                guesses[0] = "red_peg";   
-                guessDisplay[0] = '🔴';                     
-            } else if (selected == "blue_peg") {
-                guesses[0] = "blue_peg";   
-                guessDisplay[0] = '🔵'; 
-            } else if (selected == "green_peg") {
-                guesses[0] = "green_peg";
-                guessDisplay[0] = '🟢'; 
-            }          
+            updateGuesses(selected, 0);                  
+        } else if (interaction.customId == "peg-selector-2") {
+            updateGuesses(selected, 1);
+        } else if (interaction.customId == "peg-selector-3") {
+            updateGuesses(selected, 2);
+        } else if (interaction.customId == "peg-selector-4") {
+            updateGuesses(selected, 3);
         }
 
         await updateDisplay(interaction);
@@ -103,8 +100,39 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+// Helper methods
+
 async function updateDisplay(interaction) {
     await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]}  ${guessDisplay[2]} ${guessDisplay[3]}`); // TODO: Update current state and response for guess
 }
 
-client.login(token); // This logs in as the bot and sets up all the client event handlers
+function updateGuesses(value, position) {
+    if (value == 'blue_peg') {
+		guesses[position] = "blue_peg";   
+        guessDisplay[position] = '🔵'; 
+	} else if (value == 'green_peg') {
+		guesses[position] = "green_peg";
+        guessDisplay[position] = '🟢'; 
+	} else if (value == 'red_peg') {
+		guesses[position] = "red_peg";   
+        guessDisplay[position] = '🔴'; 
+	} else if (value == 'yellow_peg') {
+        guesses[position] = "yellow_peg";   
+        guessDisplay[position] = '🟡'; 
+	} else if (value == 'orange_peg') {
+        guesses[position] = "orange_peg";   
+        guessDisplay[position] = '🟠';
+	} else if (value == 'purple_peg') {
+        guesses[position] = "purple_peg";   
+        guessDisplay[position] = '🟣';
+	} else if (value == 'white_peg') {
+        guesses[position] = "white_peg";   
+        guessDisplay[position] = '⚪';
+	} else if (value == 'black_peg') {
+        guesses[position] = "black_peg";   
+        guessDisplay[position] = '⚫';
+	} 
+}
+
+// This logs in as the bot and sets up all the client event handlers
+client.login(token); 
