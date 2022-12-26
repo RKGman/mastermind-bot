@@ -62,17 +62,18 @@ client.on('interactionCreate', async interaction => {
         // TODO: Figure out if state can be kept here in index for now...
         if (interaction.customId == "peg-selector-1") {
             if (selected == "red_peg") {
-                guesses[0] = "red_peg";              
-                //await interaction.update('🔴' + "selected");
-                await interaction.update("⭕, ⭕, ⭕, ⭕");
+                guesses[0] = "red_peg";   
+                guessDisplay[0] = '🔴';                     
             } else if (selected == "blue_peg") {
-                guesses[0] = "blue_peg";
-                await interaction.update('🔵' + "selected");
+                guesses[0] = "blue_peg";   
+                guessDisplay[0] = '🔵'; 
             } else if (selected == "green_peg") {
                 guesses[0] = "green_peg";
-                await interaction.update('🟢' + "selected");
+                guessDisplay[0] = '🟢'; 
             }          
         }
+
+        await updateDisplay(interaction);
     }	
 
     if (interaction.isButton()) {
@@ -101,5 +102,9 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
 });
+
+async function updateDisplay(interaction) {
+    await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]}  ${guessDisplay[2]} ${guessDisplay[3]}`); // TODO: Update current state and response for guess
+}
 
 client.login(token); // This logs in as the bot and sets up all the client event handlers
