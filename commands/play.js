@@ -9,9 +9,9 @@ module.exports = {
 		const row1 = new ActionRowBuilder()
 			.addComponents( [
 				new ButtonBuilder()
-					.setLabel('Start')
+					.setLabel('Submit Guess')
 					.setStyle(ButtonStyle.Primary)
-					.setCustomId("start-game-btn"), 
+					.setCustomId("submit-btn"), 
 				new ButtonBuilder()
 					.setLabel('End')
 					.setStyle(ButtonStyle.Secondary)

@@ -32,10 +32,14 @@ for (const file of commandFiles) {
 }
 // ====================================================== 
 
+const secretCode = ["🟡", "🔴", "🟢", "🔵"];
+
 // Current Guesses
 const guesses = ["blue_peg", "green_peg", "red_peg", "yellow_peg"];
 
 const guessDisplay = ["⭕", "⭕", "⭕", "⭕"];
+
+const response =  ["⭕", "⭕", "⭕", "⭕"];
 
 // A message to let us know the bot spun up correctly...
 client.once('ready', () => {
@@ -68,15 +72,18 @@ client.on('interactionCreate', async interaction => {
             updateGuesses(selected, 2);
         } else if (interaction.customId == "peg-selector-4") {
             updateGuesses(selected, 3);
-        }
+        }  
 
         await updateDisplay(interaction);
     }	
 
     if (interaction.isButton()) {
         console.log("Button Press Detected...");
-        if (interaction.customId == "start-game-btn") {
-            interaction.reply({ content: 'Starting Game...', ephemeral: true });
+        if (interaction.customId == "submit-btn") {
+            // Process the guess
+            processGuess();
+            var responseString = getResponse();
+            interaction.reply({ content: `Bot Response: ${responseString}`, ephemeral: true });
         } else {
             interaction.reply({ content: 'You pressed a different button...', ephemeral: true });
         }
@@ -93,7 +100,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     try {
-        await command.execute(interaction, guesses);
+        await command.execute(interaction);
     } catch (error) {
         console.error(error);
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
@@ -103,7 +110,7 @@ client.on('interactionCreate', async interaction => {
 // Helper methods
 
 async function updateDisplay(interaction) {
-    await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]}  ${guessDisplay[2]} ${guessDisplay[3]}`); // TODO: Update current state and response for guess
+    await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]}  ${guessDisplay[2]} ${guessDisplay[3]}`); 
 }
 
 function updateGuesses(value, position) {
@@ -115,7 +122,7 @@ function updateGuesses(value, position) {
         guessDisplay[position] = '🟢'; 
 	} else if (value == 'red_peg') {
 		guesses[position] = "red_peg";   
-        guessDisplay[position] = '🔴'; 
+        guessDisplay[position] = '🔴';  
 	} else if (value == 'yellow_peg') {
         guesses[position] = "yellow_peg";   
         guessDisplay[position] = '🟡'; 
@@ -132,6 +139,36 @@ function updateGuesses(value, position) {
         guesses[position] = "black_peg";   
         guessDisplay[position] = '⚫';
 	} 
+}
+
+function processGuess() {
+    for (var x = 0; x < secretCode.length; x++) {
+        for (var y = 0; y < guessDisplay.length; y++) {
+            // If the peg matches exactly, add a red peg to the response
+            if (guessDisplay[y] == secretCode[x] && x == y) {
+                addValueToResponse("🔴");
+            }
+        }
+    }
+}
+
+function getResponse() {
+    var returnValue = "";
+
+    for (var i = 0; i < response.length; i++) {
+        returnValue += response[i] + " ";
+    }
+
+    return returnValue;
+}
+
+function addValueToResponse(result) {
+    for (var i = 0; i < response.length; i++) {
+        if (response[i] == "⭕") {
+            response[i] = result;
+            break;
+        }
+    }
 }
 
 // This logs in as the bot and sets up all the client event handlers
