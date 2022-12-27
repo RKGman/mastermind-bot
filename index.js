@@ -88,11 +88,14 @@ client.on('interactionCreate', async interaction => {
                 interaction.reply({ content: `YOU WIN : ${responseString}`, ephemeral: true });
 
             } else {
-                interaction.reply({ content: `Bot Response : ${responseString}`, ephemeral: true });
+                interaction.reply({ content: `Response : ${responseString}`, ephemeral: true });
 
             }
+
+            resetResponse();
         } else {
-            interaction.reply({ content: 'You pressed a different button...', ephemeral: true });
+            // TODO: Reset the game...
+            interaction.reply({ content: 'Resetting Game...', ephemeral: true });
         }
     }
 
@@ -148,6 +151,12 @@ function updateGuesses(value, position) {
 	} 
 }
 
+function resetResponse() {
+    for (var i = 0; i < response.length; i++) {
+        response[i] = "⭕";
+    }
+}
+
 function processGuess() {
     for (var x = 0; x < secretCode.length; x++) {
         var matchFound = false;
@@ -188,8 +197,30 @@ function isGameOver() {
 function getResponse() {
     var returnValue = "";
 
+    var totalRed = 0;
+    var totalWhite = 0;
+    var totalBlank = 0;
+
     for (var i = 0; i < response.length; i++) {
-        returnValue += response[i] + " ";
+        if (response[i] == "🔴") {
+            totalRed++;
+        } else if (response[i] == "⚪") {
+            totalWhite++;
+        } else {
+            totalBlank++;
+        }
+    }
+
+    for (var i = 0; i < totalRed; i++) {
+        returnValue += "🔴 ";
+    }
+
+    for (var i = 0; i < totalWhite; i++) {
+        returnValue += "⚪ ";
+    }
+
+    for (var i = 0; i < totalBlank; i++) {
+        returnValue += "⭕ ";
     }
 
     return returnValue;

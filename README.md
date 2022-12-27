@@ -23,6 +23,10 @@ Currently using discord.js v14 (https://discordjs.guide/)
 
 # TODO: 
 
-- Figure out how to initialize the game state (generate a peg color code combo)
+- Add ability to reset game
 
-- Figure out how to pass around "state" and guesses
+- Add feature for remaining guesses (losing case)
+
+- Add a way to see previous guesses (and responses)
+
+- Organize things away from index.js
