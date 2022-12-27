@@ -83,7 +83,14 @@ client.on('interactionCreate', async interaction => {
             // Process the guess
             processGuess();
             var responseString = getResponse();
-            interaction.reply({ content: `Bot Response: ${responseString}`, ephemeral: true });
+
+            if (isGameOver() == true) {
+                interaction.reply({ content: `YOU WIN : ${responseString}`, ephemeral: true });
+
+            } else {
+                interaction.reply({ content: `Bot Response : ${responseString}`, ephemeral: true });
+
+            }
         } else {
             interaction.reply({ content: 'You pressed a different button...', ephemeral: true });
         }
@@ -110,7 +117,7 @@ client.on('interactionCreate', async interaction => {
 // Helper methods
 
 async function updateDisplay(interaction) {
-    await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]}  ${guessDisplay[2]} ${guessDisplay[3]}`); 
+        await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]}  ${guessDisplay[2]} ${guessDisplay[3]}`); 
 }
 
 function updateGuesses(value, position) {
@@ -143,13 +150,39 @@ function updateGuesses(value, position) {
 
 function processGuess() {
     for (var x = 0; x < secretCode.length; x++) {
+        var matchFound = false;
+
         for (var y = 0; y < guessDisplay.length; y++) {
-            // If the peg matches exactly, add a red peg to the response
-            if (guessDisplay[y] == secretCode[x] && x == y) {
-                addValueToResponse("🔴");
+            if (matchFound) {
+                break; // TODO: Handel duplicates? For now we will only handle unique pegs.
+            }
+           
+            if (guessDisplay[y] == secretCode[x]) {
+
+                // If the peg matches position exactly, add a red peg to the response.
+                if (x == y) {
+                    addValueToResponse("🔴");
+                } else { // Otherwise, the peg matches but isn't in the right spot.
+                    addValueToResponse("⚪");
+                }
+
+                matchFound = true;
             }
         }
     }
+}
+
+function isGameOver() {
+    var returnValue = true;
+
+    for (var i = 0; i< response.length; i++) {
+        if (response[i] != "🔴") {
+            returnValue = false;
+            break;
+        }
+    }
+
+    return returnValue;
 }
 
 function getResponse() {
