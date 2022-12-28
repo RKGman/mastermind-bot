@@ -16,7 +16,7 @@ const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
 
 // Set up the client and intents
-const client = new Client({ intents: [GatewayIntentBits.Guilds]});
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 // ========= Set up the collection of commands =========
 client.commands = new Collection();
@@ -32,6 +32,8 @@ for (const file of commandFiles) {
 }
 // ====================================================== 
 
+const pegOptions = ["🔵", "🟢", "🔴", "🟡", "🟠", "🟣", "⚪", "⚫"];
+
 const secretCode = ["🟡", "🔴", "🟢", "🔵"];
 
 // Current Guesses
@@ -39,7 +41,9 @@ const guesses = ["blue_peg", "green_peg", "red_peg", "yellow_peg"];
 
 const guessDisplay = ["⭕", "⭕", "⭕", "⭕"];
 
-const response =  ["⭕", "⭕", "⭕", "⭕"];
+const lastGuess = ["⭕", "⭕", "⭕", "⭕"];
+
+const response = ["⭕", "⭕", "⭕", "⭕"];
 
 // A message to let us know the bot spun up correctly...
 client.once('ready', () => {
@@ -63,39 +67,48 @@ client.on('interactionCreate', async interaction => {
 
         const selected = interaction.values[0];
 
-        // TODO: Figure out if state can be kept here in index for now...
         if (interaction.customId == "peg-selector-1") {
-            updateGuesses(selected, 0);                  
+            updateGuesses(selected, 0);
         } else if (interaction.customId == "peg-selector-2") {
             updateGuesses(selected, 1);
         } else if (interaction.customId == "peg-selector-3") {
             updateGuesses(selected, 2);
         } else if (interaction.customId == "peg-selector-4") {
             updateGuesses(selected, 3);
-        }  
+        }
 
         await updateDisplay(interaction);
-    }	
+    }
 
     if (interaction.isButton()) {
         console.log("Button Press Detected...");
         if (interaction.customId == "submit-btn") {
+
             // Process the guess
-            processGuess();
-            var responseString = getResponse();
+            var result = processGuess();
+
+            // Handle invalid guess.
+            if (result == false) {
+                interaction.reply({ content: "Invalid Guess. Please Set 4 Pegs To Submit A Guess.", ephemeral: true });
+                return;
+            }
+
+            // Get the response and last guess
+            var replyString = getReplyString();
 
             if (isGameOver() == true) {
-                interaction.reply({ content: `YOU WIN : ${responseString}`, ephemeral: true });
+                interaction.reply({ content: `YOU WIN : ${replyString}`, ephemeral: true });
 
             } else {
-                interaction.reply({ content: `Response : ${responseString}`, ephemeral: true });
+                interaction.reply({ content: `${replyString}`, ephemeral: true });
 
             }
 
-            resetResponse();
-        } else {
-            // TODO: Reset the game...
+            resetResponseAndLastGuess();
+        } else if (interaction.customId == "reset-btn") {
             interaction.reply({ content: 'Resetting Game...', ephemeral: true });
+
+            resetGame();
         }
     }
 
@@ -120,71 +133,127 @@ client.on('interactionCreate', async interaction => {
 // Helper methods
 
 async function updateDisplay(interaction) {
-        await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]}  ${guessDisplay[2]} ${guessDisplay[3]}`); 
+    await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]}  ${guessDisplay[2]} ${guessDisplay[3]}`);
 }
 
 function updateGuesses(value, position) {
     if (value == 'blue_peg') {
-		guesses[position] = "blue_peg";   
-        guessDisplay[position] = '🔵'; 
-	} else if (value == 'green_peg') {
-		guesses[position] = "green_peg";
-        guessDisplay[position] = '🟢'; 
-	} else if (value == 'red_peg') {
-		guesses[position] = "red_peg";   
-        guessDisplay[position] = '🔴';  
-	} else if (value == 'yellow_peg') {
-        guesses[position] = "yellow_peg";   
-        guessDisplay[position] = '🟡'; 
-	} else if (value == 'orange_peg') {
-        guesses[position] = "orange_peg";   
+        guesses[position] = "blue_peg";
+        guessDisplay[position] = '🔵';
+    } else if (value == 'green_peg') {
+        guesses[position] = "green_peg";
+        guessDisplay[position] = '🟢';
+    } else if (value == 'red_peg') {
+        guesses[position] = "red_peg";
+        guessDisplay[position] = '🔴';
+    } else if (value == 'yellow_peg') {
+        guesses[position] = "yellow_peg";
+        guessDisplay[position] = '🟡';
+    } else if (value == 'orange_peg') {
+        guesses[position] = "orange_peg";
         guessDisplay[position] = '🟠';
-	} else if (value == 'purple_peg') {
-        guesses[position] = "purple_peg";   
+    } else if (value == 'purple_peg') {
+        guesses[position] = "purple_peg";
         guessDisplay[position] = '🟣';
-	} else if (value == 'white_peg') {
-        guesses[position] = "white_peg";   
+    } else if (value == 'white_peg') {
+        guesses[position] = "white_peg";
         guessDisplay[position] = '⚪';
-	} else if (value == 'black_peg') {
-        guesses[position] = "black_peg";   
+    } else if (value == 'black_peg') {
+        guesses[position] = "black_peg";
         guessDisplay[position] = '⚫';
-	} 
+    }
 }
 
-function resetResponse() {
+function resetGame() {
+    // Get a new set of unique pegs, randomly selected
+    var randomSelection = ["⭕", "⭕", "⭕", "⭕"];
+
+    var randomPegPosition = Math.floor(Math.random() * pegOptions.length);
+
+    randomSelection[0] = pegOptions[randomPegPosition];
+
+    var remainingSelections = pegOptions.filter((data, index) => index !== randomPegPosition);
+
+    randomPegPosition = Math.floor(Math.random() * remainingSelections.length);
+
+    randomSelection[1] = remainingSelections[randomPegPosition];
+
+    remainingSelections = remainingSelections.filter((data, index) => index !== randomPegPosition);
+
+    randomPegPosition = Math.floor(Math.random() * remainingSelections.length);
+
+    randomSelection[2] = remainingSelections[randomPegPosition];
+
+    remainingSelections = remainingSelections.filter((data, index) => index !== randomPegPosition);
+
+    randomPegPosition = Math.floor(Math.random() * remainingSelections.length);
+
+    randomSelection[3] = remainingSelections[randomPegPosition];
+
+    remainingSelections = remainingSelections.filter((data, index) => index !== randomPegPosition);
+
+    // Update the secret code.
+    for (var i = 0; i < secretCode.length; i++) {
+        secretCode[i] = randomSelection[i];
+    }
+
+    resetResponseAndLastGuess();
+}
+
+function resetResponseAndLastGuess() {
     for (var i = 0; i < response.length; i++) {
         response[i] = "⭕";
+        lastGuess[i] = "⭕";
     }
 }
 
 function processGuess() {
-    for (var x = 0; x < secretCode.length; x++) {
-        var matchFound = false;
+    var result = true;
 
-        for (var y = 0; y < guessDisplay.length; y++) {
-            if (matchFound) {
-                break; // TODO: Handel duplicates? For now we will only handle unique pegs.
-            }
-           
-            if (guessDisplay[y] == secretCode[x]) {
-
-                // If the peg matches position exactly, add a red peg to the response.
-                if (x == y) {
-                    addValueToResponse("🔴");
-                } else { // Otherwise, the peg matches but isn't in the right spot.
-                    addValueToResponse("⚪");
-                }
-
-                matchFound = true;
-            }
+    // Check for valid response
+    for (var x = 0; x < guessDisplay.length; x++) {
+        if (guessDisplay[x] == "⭕") {
+            result = false;
+            break;
         }
     }
+
+    if (result == true) {
+        for (var x = 0; x < secretCode.length; x++) {
+            var matchFound = false;
+
+            for (var y = 0; y < guessDisplay.length; y++) {
+                if (matchFound) {
+                    break; // TODO: Handel duplicates? For now we will only handle unique pegs.
+                }
+
+                if (guessDisplay[y] == secretCode[x]) {
+
+                    // If the peg matches position exactly, add a red peg to the response.
+                    if (x == y) {
+                        addValueToResponse("🔴");
+                    } else { // Otherwise, the peg matches but isn't in the right spot.
+                        addValueToResponse("⚪");
+                    }
+
+                    matchFound = true;
+                }
+            }
+        }
+
+        // Copy the last guess for the display
+        for (var i = 0; i < guessDisplay.length; i++) {
+            lastGuess[i] = guessDisplay[i];
+        }
+    }
+
+    return result;
 }
 
 function isGameOver() {
     var returnValue = true;
 
-    for (var i = 0; i< response.length; i++) {
+    for (var i = 0; i < response.length; i++) {
         if (response[i] != "🔴") {
             returnValue = false;
             break;
@@ -194,9 +263,18 @@ function isGameOver() {
     return returnValue;
 }
 
-function getResponse() {
-    var returnValue = "";
+function getReplyString() {
 
+    // Add the last guess
+    var returnValue = "Last Guess: ";
+
+    for (var i = 0; i < lastGuess.length; i++) {
+        returnValue += `${lastGuess[i]} `;
+    }
+
+    returnValue += "\rResponse: ";
+
+    // Sort and add the response pegs
     var totalRed = 0;
     var totalWhite = 0;
     var totalBlank = 0;

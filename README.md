@@ -23,10 +23,8 @@ Currently using discord.js v14 (https://discordjs.guide/)
 
 # TODO: 
 
-- Add ability to reset game
+- Add guess in the response for tracking
 
 - Add feature for remaining guesses (losing case)
-
-- Add a way to see previous guesses (and responses)
 
 - Organize things away from index.js

@@ -6,18 +6,7 @@ module.exports = {
 		.setName('play')
 		.setDescription('Start a game of Mastermind'),
 	async execute(interaction) {
-		const row1 = new ActionRowBuilder()
-			.addComponents( [
-				new ButtonBuilder()
-					.setLabel('Submit Guess')
-					.setStyle(ButtonStyle.Primary)
-					.setCustomId("submit-btn"), 
-				new ButtonBuilder()
-					.setLabel('End')
-					.setStyle(ButtonStyle.Secondary)
-					.setCustomId("end-game-btn")
-				]
-			);
+		
 
 
 		// TODO: Set up a starting configuration
@@ -29,7 +18,7 @@ module.exports = {
 		var rv = processGame(2);
 		
 		// TODO: Will have to handle a "guess state"... possible handle a "submit guess state"
-		const row2 = new ActionRowBuilder()
+		const row1 = new ActionRowBuilder()
 			.addComponents([
 				new StringSelectMenuBuilder()
 					.setCustomId('peg-selector-1')
@@ -38,7 +27,7 @@ module.exports = {
 				]			
 			);
 
-		const row3 = new ActionRowBuilder()
+		const row2 = new ActionRowBuilder()
 			.addComponents([
 				new StringSelectMenuBuilder()
 					.setCustomId('peg-selector-2')
@@ -47,7 +36,7 @@ module.exports = {
 				]			
 			);
 
-		const row4 = new ActionRowBuilder()
+		const row3 = new ActionRowBuilder()
 			.addComponents([
 				new StringSelectMenuBuilder()
 					.setCustomId('peg-selector-3')
@@ -56,7 +45,7 @@ module.exports = {
 				]			
 			);
 
-		const row5 = new ActionRowBuilder()
+		const row4 = new ActionRowBuilder()
 			.addComponents([
 				new StringSelectMenuBuilder()
 					.setCustomId('peg-selector-4')
@@ -65,13 +54,29 @@ module.exports = {
 				]			
 			);
 
+		const row5 = new ActionRowBuilder()
+			.addComponents( [
+				new ButtonBuilder()
+					.setLabel('Submit Guess')
+					.setStyle(ButtonStyle.Primary)
+					.setCustomId("submit-btn"), 
+				new ButtonBuilder()
+					.setLabel('Reset Game')
+					.setStyle(ButtonStyle.Secondary)
+					.setCustomId("reset-btn")
+				]
+			);
+
+		const initialInstructions = "Guess a code combination with the pegs.  \r\rAfter you submit a guess, I will respond with some clues: \r\r1) 🔴 - You have an exact matching peg for color and place \r2) ⚪ - You have a matching peg color, but it is in the wrong place \r3) ⭕ - There is a peg in your guess that does not exist in my peg / code combination  \r\rYou have 10 guesses or the bots take over the world!"
+
 		const embed = new EmbedBuilder()
 			.setColor(0x0099FF)
-			.setTitle('Response')
-			.setDescription('Some description here');
+			.setTitle('Rules')
+			.setDescription(initialInstructions);
 
 		// Apparently can only have a maximum of 5 rows... which might be perfect for our "form"
-		await interaction.reply({ content: 'You Ready?!', embeds: [embed], components: [row1, row2, row3, row4, row5] });
+		await interaction.reply({ content: '⭕ ⭕ ⭕ ⭕', embeds: [embed], components: [row1, row2, row3, row4, row5] });
+		//await interaction.reply({ content: initialInstructions, components: [row1, row2, row3, row4, row5] });
 	},
 };
 
