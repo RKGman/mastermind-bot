@@ -23,8 +23,6 @@ Currently using discord.js v14 (https://discordjs.guide/)
 
 # TODO: 
 
-- Add guess in the response for tracking
-
-- Add feature for remaining guesses (losing case)
+- Add way to "close" or "move" the form on a game reset or if /play command is used again.
 
 - Organize things away from index.js

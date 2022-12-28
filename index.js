@@ -32,7 +32,7 @@ for (const file of commandFiles) {
 }
 // ====================================================== 
 
-const pegOptions = ["🔵", "🟢", "🔴", "🟡", "🟠", "🟣", "⚪", "⚫"];
+const pegOptions = ["🔵", "🟢", "🔴", "🟡", "🟠", "🟣", "⚪", "🟤"];
 
 const secretCode = ["🟡", "🔴", "🟢", "🔵"];
 
@@ -44,6 +44,8 @@ const guessDisplay = ["⭕", "⭕", "⭕", "⭕"];
 const lastGuess = ["⭕", "⭕", "⭕", "⭕"];
 
 const response = ["⭕", "⭕", "⭕", "⭕"];
+
+var guessesRemaining = 10;
 
 // A message to let us know the bot spun up correctly...
 client.once('ready', () => {
@@ -89,24 +91,30 @@ client.on('interactionCreate', async interaction => {
 
             // Handle invalid guess.
             if (result == false) {
-                interaction.reply({ content: "Invalid Guess. Please Set 4 Pegs To Submit A Guess.", ephemeral: true });
+                interaction.reply({ content: "Invalid Guess. Please Set 4 Pegs To Submit A Guess.", ephemeral: false });
                 return;
             }
 
             // Get the response and last guess
-            var replyString = getReplyString();
+            var replyString = getReplyString(interaction.user.username);
 
             if (isGameOver() == true) {
-                interaction.reply({ content: `YOU WIN : ${replyString}`, ephemeral: true });
+                if (guessesRemaining == -1) {
+                    interaction.reply({ content: `${replyString}\r\rGAME OVER! THE BOTS HAVE TAKEN OVER! Try Again... Game Resetting...`, ephemeral: false });
+                } else {
+                    interaction.reply({ content: `${replyString}\r\rYOU WIN! Thanks For Saving The World! ... Game Resetting...`, ephemeral: false });
+
+                }
+
+                resetGame();
 
             } else {
-                interaction.reply({ content: `${replyString}`, ephemeral: true });
-
+                interaction.reply({ content: `${replyString}`, ephemeral: false });
             }
 
             resetResponseAndLastGuess();
         } else if (interaction.customId == "reset-btn") {
-            interaction.reply({ content: 'Resetting Game...', ephemeral: true });
+            interaction.reply({ content: 'Resetting Game...', ephemeral: false });
 
             resetGame();
         }
@@ -158,9 +166,9 @@ function updateGuesses(value, position) {
     } else if (value == 'white_peg') {
         guesses[position] = "white_peg";
         guessDisplay[position] = '⚪';
-    } else if (value == 'black_peg') {
-        guesses[position] = "black_peg";
-        guessDisplay[position] = '⚫';
+    } else if (value == 'brown_peg') {
+        guesses[position] = "brown_peg";
+        guessDisplay[position] = '🟤';
     }
 }
 
@@ -198,6 +206,8 @@ function resetGame() {
     }
 
     resetResponseAndLastGuess();
+
+    guessesRemaining = 10;
 }
 
 function resetResponseAndLastGuess() {
@@ -245,6 +255,8 @@ function processGuess() {
         for (var i = 0; i < guessDisplay.length; i++) {
             lastGuess[i] = guessDisplay[i];
         }
+
+        guessesRemaining--;
     }
 
     return result;
@@ -260,10 +272,14 @@ function isGameOver() {
         }
     }
 
+    if (guessesRemaining == -1) {
+        returnValue = true;
+    }
+
     return returnValue;
 }
 
-function getReplyString() {
+function getReplyString(username) {
 
     // Add the last guess
     var returnValue = "Last Guess: ";
@@ -272,7 +288,9 @@ function getReplyString() {
         returnValue += `${lastGuess[i]} `;
     }
 
-    returnValue += "\rResponse: ";
+    returnValue += `\rGuess Submitted By -> ${username}`;
+
+    returnValue += "\r\rResponse: ";
 
     // Sort and add the response pegs
     var totalRed = 0;
@@ -300,6 +318,12 @@ function getReplyString() {
     for (var i = 0; i < totalBlank; i++) {
         returnValue += "⭕ ";
     }
+
+    if (guessesRemaining < 0) {
+        returnValue += `\rGuesses Remaining: 0`;
+    } else {
+        returnValue += `\rGuesses Remaining: ${guessesRemaining}`;
+    }    
 
     return returnValue;
 }

@@ -6,18 +6,10 @@ module.exports = {
 		.setName('play')
 		.setDescription('Start a game of Mastermind'),
 	async execute(interaction) {
-		
 
-
-		// TODO: Set up a starting configuration
-		// TODO: Add a row of selectors
-		// TODO: "Submit" a guess
-		// TODO: Set up a reply
-
-		// Possibly pass in "state" and guess? 
+		// TODO: Possibly move the game logic?
 		var rv = processGame(2);
 		
-		// TODO: Will have to handle a "guess state"... possible handle a "submit guess state"
 		const row1 = new ActionRowBuilder()
 			.addComponents([
 				new StringSelectMenuBuilder()
@@ -67,7 +59,7 @@ module.exports = {
 				]
 			);
 
-		const initialInstructions = "Guess a code combination with the pegs.  \r\rAfter you submit a guess, I will respond with some clues: \r\r1) 🔴 - You have an exact matching peg for color and place \r2) ⚪ - You have a matching peg color, but it is in the wrong place \r3) ⭕ - There is a peg in your guess that does not exist in my peg / code combination  \r\rYou have 10 guesses or the bots take over the world!"
+		const initialInstructions = "Guess a code combination with the pegs.  \r\rAfter you submit a guess, I will respond with some clues: \r\r1) 🔴 - You have an exact matching peg for color and place \r2) ⚪ - You have a matching peg color, but it is in the wrong place \r3) ⭕ - There is a peg in your guess that does not exist in my peg / code combination  \r\r NOTE: There are no duplicate pegs in my code combination (for now). \r\rYou have 10 guesses or the bots take over the world!"
 
 		const embed = new EmbedBuilder()
 			.setColor(0x0099FF)
@@ -117,9 +109,9 @@ function getOptions() {
 		value: 'white_peg',
 	},
 	{
-		label: '⚫ - Black',
-		description: 'Black Peg',
-		value: 'black_peg',
+		label: '🟤 - Brown',
+		description: 'Brown Peg',
+		value: 'brown_peg',
 	}];
 }
 
@@ -138,7 +130,7 @@ function getPlaceholder(value) {
 		return '🟣 - Purple';
 	} else if (value == 'white_peg') {
 		return '⚪ - White';
-	} else if (value == 'black_peg') {
-		return '⚫ - Black';
+	} else if (value == 'brown_peg') {
+		return '🟤 - Brown';
 	}
 }
