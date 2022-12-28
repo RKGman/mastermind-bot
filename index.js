@@ -141,7 +141,7 @@ client.on('interactionCreate', async interaction => {
 // Helper methods
 
 async function updateDisplay(interaction) {
-    await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]}  ${guessDisplay[2]} ${guessDisplay[3]}`);
+    await interaction.update(`${guessDisplay[0]} ${guessDisplay[1]} ${guessDisplay[2]} ${guessDisplay[3]}`);
 }
 
 function updateGuesses(value, position) {
